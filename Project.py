@@ -29,7 +29,7 @@ class Project:
                 d.hour,
                 d.minute
             )
-            _log+="{}\n"data["user"]
+            _log+="{}\n".format(data["user"])
             _log+="{}払いました\n".format(data["pay_money"])
             log.append(_log)
         return log
