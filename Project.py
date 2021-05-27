@@ -14,7 +14,7 @@ class Project:
         self.commit_data=[{
             "user":user,
             "commit_time":date,
-            "pay_money":0,
+            "pay_money":-1,
             "message":"",
         }]
     
@@ -23,14 +23,17 @@ class Project:
         for data in self.commit_data:
             d=data["commit_time"]
             log+="{}年{}月{}日 {}:{}\n".format(
-                d.year,
-                d.month,
-                d.day,
-                d.hour,
-                d.minute
+                d["year"],
+                d.["month"],
+                d.["day"],
+                d.["hour"],
+                d.["minut"],
             )
             log+="{}\n".format(data["user"])
-            log+="{}払いました\n".format(data["pay_money"])
+            if data["pay_money"]==-1:
+                log+="{}がプロジェクトを作成しました".format(data["user"])
+            else:
+                log+="{}払いました\n".format(data["pay_money"])
         return log
 
     
