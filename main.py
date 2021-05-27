@@ -59,10 +59,6 @@ def handle_message(event):
     user_id=event.source.user_id
     user=line_bot_api.get_profile(user_id).display_name
     project_id=user_id
-    print(project_id)
-    print(user)
-    print(mes)
-    print(type(mes))
     if mes=="project":
         print(mes)
         project[project_id]=Project("test",user)
@@ -73,7 +69,7 @@ def handle_message(event):
 def send(_token,_textmessage):
     line_bot_api.reply_message(
         _token,
-        _textmessage
+        TextSendMessage(text=_textmessage)
     ) 
 # ポート番号の設定j
 if __name__ == "__main__":
