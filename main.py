@@ -50,7 +50,7 @@ def callback():
 project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    mes=event.message.text
+    mes=str(event.message.text)
     source_type=event.source.type
     if source_type=="group":
         project_id=event.source.groupId
@@ -64,11 +64,7 @@ def handle_message(event):
     if mes=="project":
         project[project_id]=Project("test",user)
         res="{}がプロジェクトを作成しました".format(user)
-        #send(event.reply_token,res)
-        line_bot_api.reply_message(
-            event.reply_token,
-            res
-        ) 
+        send(event.reply_token,res)
     if mes=="ろぐ":
         pass
 def send(_token,_textmessage):
