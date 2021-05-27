@@ -59,6 +59,9 @@ def handle_message(event):
     user_id=event.source.user_id
     user=line_bot_api.get_profile(user_id).display_name
     project_id=user_id
+    print(project_id)
+    print(type(project_id))
+    project_id=int(project_id)
     if mes=="project":
         project[str(project_id)]=Project("test",user)
         res="{}がプロジェクトを作成しました"
