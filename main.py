@@ -64,8 +64,10 @@ def handle_message(event):
         project[project_id]=Project("test",user)
         res="{}がプロジェクトを作成しました".format(user)
         send(event.reply_token,res)
-    if mes=="ろぐ":
-        pass
+    if mes in "ろぐ":
+        log_data=project[project_id].log_data()
+        send(event.reply_token,log_data)
+
 def send(_token,_textmessage):
     line_bot_api.reply_message(
         _token,

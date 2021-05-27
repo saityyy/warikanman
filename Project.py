@@ -18,20 +18,19 @@ class Project:
             "message":"",
         }]
     
-    def show_log(self):
-        log=[]
+    def log_data(self):
+        log=""
         for data in self.commit_data:
             d=data["commit_time"]
-            _log="{}年{}月{}日 {}:{}\n".format(
+            log+="{}年{}月{}日 {}:{}\n".format(
                 d.year,
                 d.month,
                 d.day,
                 d.hour,
                 d.minute
             )
-            _log+="{}\n".format(data["user"])
-            _log+="{}払いました\n".format(data["pay_money"])
-            log.append(_log)
+            log+="{}\n".format(data["user"])
+            log+="{}払いました\n".format(data["pay_money"])
         return log
 
     
