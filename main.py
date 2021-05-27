@@ -50,6 +50,7 @@ List=[]
 def handle_message(event):
     mes=event.message.text
     List.append(mes)
+    print(List)
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text)) #ここでオウム返しのメッセージを返します。
