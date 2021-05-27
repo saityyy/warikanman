@@ -64,7 +64,11 @@ def handle_message(event):
     if mes=="project":
         project[project_id]=Project("test",user)
         res="{}がプロジェクトを作成しました".format(user)
-        send(event.reply_token,res)
+        #send(event.reply_token,res)
+        line_bot_api.reply_message(
+            event.reply_token,
+            res
+        ) 
     if mes=="ろぐ":
         pass
 def send(_token,_textmessage):

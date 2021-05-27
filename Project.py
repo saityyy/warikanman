@@ -4,19 +4,19 @@ class Project:
     def __init__(self,project_name,user):
         self.project_name=project_name
         dt_now=datetime.datetime.now()
-        #date={
-            #"year":dt_now.year,
-            #"month":dt_now.month,
-            #"day":dt_now.day,
-            #"hour":dt_now.hour,
-            #"minute":dt_now.minute,
-        #}
-        #self.commit_data=[{
-            #"user":user,
-            #"commit_time":date,
-            #"pay_money":0,
-            #"message":"",
-        #}]
+        date={
+            "year":dt_now.year,
+            "month":dt_now.month,
+            "day":dt_now.day,
+            "hour":dt_now.hour,
+            "minute":dt_now.minute,
+        }
+        self.commit_data=[{
+            "user":user,
+            "commit_time":date,
+            "pay_money":0,
+            "message":"",
+        }]
     
     def show_log(self):
         log=[]
