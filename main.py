@@ -61,7 +61,7 @@ def handle_message(event):
     project_id=user_id
     print(project_id)
     if mes=="project":
-        project[project_id[:10]]=Project("test",user)
+        project["test"]=Project("test",user)
         res="{}がプロジェクトを作成しました"
         send(event.reply_token,res)
     if mes=="ろぐ":
