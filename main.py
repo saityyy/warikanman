@@ -51,14 +51,13 @@ project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=event.message.text
-    source_type=event.source.type=event.source.type
+    source_type=event.source.type
     if source_type=="group":
         project_id=event.source.groupId
     elif source_type=="room":
         project_id=event.source.roomId
     print(event)
     print(event.source)
-    print(type(event.source))
     print(event.source["userId"])
     userID=event.source.userId["userId"]
     user=line_bot_api.get_profile(userID).display_name
