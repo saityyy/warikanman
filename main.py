@@ -61,6 +61,7 @@ def handle_message(event):
     project_id=user_id
     print(project_id)
     print(user)
+    print(mes)
     if mes=="project":
         project[project_id]=Project("test",user)
         res="{}がプロジェクトを作成しました".format(user)
