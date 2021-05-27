@@ -60,10 +60,8 @@ def handle_message(event):
     user=line_bot_api.get_profile(user_id).display_name
     project_id=user_id
     print(project_id)
-    print(type(project_id))
-    project_id=int(project_id)
     if mes=="project":
-        project[str(project_id)]=Project("test",user)
+        project[project_id[:10]]=Project("test",user)
         res="{}がプロジェクトを作成しました"
         send(event.reply_token,res)
     if mes=="ろぐ":
