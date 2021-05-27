@@ -24,10 +24,10 @@ class Project:
             d=data["commit_time"]
             log+="{}年{}月{}日 {}:{}\n".format(
                 d["year"],
-                d.["month"],
-                d.["day"],
-                d.["hour"],
-                d.["minut"],
+                d["month"],
+                d["day"],
+                d["hour"],
+                d["minut"],
             )
             log+="{}\n".format(data["user"])
             if data["pay_money"]==-1:
