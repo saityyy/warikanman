@@ -27,7 +27,7 @@ class Project:
                 d["month"],
                 d["day"],
                 d["hour"],
-                d["minut"],
+                d["minute"],
             )
             log+="{}\n".format(data["user"])
             if data["pay_money"]==-1:
