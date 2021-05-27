@@ -73,9 +73,7 @@ def handle_message(event):
     elif "add" in mes:
         project[project_id].pay_money(user,mes)
     elif "accounting" in mes:
-
-    
-    
+        pass
 
 def send(_token,_textmessage):
     line_bot_api.reply_message(
