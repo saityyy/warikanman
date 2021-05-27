@@ -59,7 +59,7 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=event.message.text)) #ここでオウム返しのメッセージを返します。
  
-# ポート番号の設定
+# ポート番号の設定j
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
