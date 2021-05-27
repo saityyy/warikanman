@@ -51,15 +51,14 @@ project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=event.message.text
-    user_data=dict(event.source)
-    source_type=user_data["type"]
+    source_type=event.source.type
     if source_type=="group":
         project_id=event.source.groupId
     elif source_type=="room":
         project_id=event.source.roomId
-    userID=user_data["userId"]
-    user=line_bot_api.get_profile(userID).display_name
-    project_id=userID
+    user_id=event.source.user_id
+    user=line_bot_api.get_profile(user_id).display_name
+    project_id=user_id
     if mes=="project":
         project[str(project_id)]=Project("test",user)
         res="{}がプロジェクトを作成しました"
