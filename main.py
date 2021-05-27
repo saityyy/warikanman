@@ -10,6 +10,8 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 import os
+
+from Project import Project
  
 app = Flask(__name__)
  
@@ -45,16 +47,31 @@ def callback():
 #reply_messageの第一引数のevent.reply_tokenは、イベントの応答に用いるトークンです。 
 #第二引数には、linebot.modelsに定義されている返信用のTextSendMessageオブジェクトを渡しています。
 
-List=[] 
+project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=event.message.text
-    List.append(mes)
-    print(List)
+    source_type=event.source.type=event.source.type
+    if source_type=="group":
+        project_id=event.source.groupId
+    elif source_type=="room":
+        project_id=event.source.roomId
+    else:
+        pass
+    userID=event.source.userId
+    user=line_bot_api.get_profile(userID).display_name
+    project_id=userID
+    if mes=="project":
+        project[str(project_id)]=Project("test",user)
+        res="{}がプロジェクトを作成しました"
+        send(event.reply_token,res)
+    if mes=="ろぐ":
+        pass
+def send(_token,_textmessage):
     line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text)) #ここでオウム返しのメッセージを返します。
- 
+        _token,
+        _textmessage
+    ) 
 # ポート番号の設定j
 if __name__ == "__main__":
 #    app.run()
