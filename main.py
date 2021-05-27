@@ -51,6 +51,8 @@ project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=str(event.message.text)
+    if not mes[:5] in ["pro","add","log","acc"]:
+        break
     source_type=event.source.type
     if source_type=="group":
         project_id=event.source.groupId
@@ -58,22 +60,29 @@ def handle_message(event):
         project_id=event.source.roomId
     user_id=event.source.user_id
     user=line_bot_api.get_profile(user_id).display_name
+    # 本番ではelseの中に入れる
     project_id=user_id
     if mes=="project":
         print(mes)
         project[project_id]=Project("test",user)
         res="{}がプロジェクトを作成しました".format(user)
         send(event.reply_token,res)
-    if mes in "ろぐ":
+    elif "log" in mes:
         log_data=project[project_id].log_data()
         send(event.reply_token,log_data)
+    elif "add" in mes:
+        project[project_id].pay_money(user,mes)
+    elif "accounting" in mes:
+
+    
+    
 
 def send(_token,_textmessage):
     line_bot_api.reply_message(
         _token,
         TextSendMessage(text=_textmessage)
     ) 
-# ポート番号の設定j
+# ポート番号の設定
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))

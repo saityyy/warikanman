@@ -1,4 +1,5 @@
 import datetime
+import re
 
 class Project:
     def __init__(self,project_name,user):
@@ -29,16 +30,17 @@ class Project:
                 d["hour"],
                 d["minute"],
             )
-            log+="{}\n".format(data["user"])
             if data["pay_money"]==-1:
                 log+="{}がプロジェクトを作成しました".format(data["user"])
             else:
+                log+="{}\n".format(data["user"])
                 log+="{}払いました\n".format(data["pay_money"])
         return log
 
     
-    def add_accounting_data(self,user,pay_money,message=""):
-        self.project_name=project_name
+    def pay_money(self,user,message):
+        _,price,message=[mes for mes in message.split(" ") if len(mes)>0 ]
+        price=float(re.sub(r"\D","",price))
         dt_now=datetime.datetime.now()
         date={
             "year":dt_now.year,
@@ -50,7 +52,7 @@ class Project:
         self.commit_data.append({
             "user":user,
             "commit_time":date,
-            "pay_money":pay_money,
+            "pay_money":price,
             "message":message
         })
     
