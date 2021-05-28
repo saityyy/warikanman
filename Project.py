@@ -46,11 +46,12 @@ class Project:
         return log
 
     def pay_money(self, user_id, user, message):
+        res_message = ""
         if len(message.split()) == 2:
             _, price = message.split()
         else:
             _, price = message.split()[:2]
-            message = message.split()[2]
+            res_message = message.split()[2]
 
         price = float(re.sub(r"\D", "", price))
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
@@ -66,13 +67,13 @@ class Project:
             "user": user,
             "commit_time": date,
             "pay_money": price,
-            "message": message
+            "message": res_message
         })
         self.sum += price
         result = "記録しました\n"
-        result += "払った人：{}".format(user)
-        result += "払った金額：{}".format(price)
-        result += "メッセージ：{}".format(message)
+        result += "払った人：{}\n".format(user)
+        result += "払った金額：{}\n".format(price)
+        result += "メッセージ：{}\n".format(res_message)
         return result
 
     def check_payment(self):
