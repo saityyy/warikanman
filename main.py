@@ -51,29 +51,34 @@ project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=str(event.message.text)
-    if not mes[:3] in ["pro","add","log","acc"]:
-        return 
+    if not mes[:3] in ["pro","add","log","che"]:
+        send(event.reply_token,"冒頭に有効なコマンドを入力してください")
+        return
+    participants=re.sub(r"\D","",mes)
+    if len(participants)==0:
+        send(event.reply_token,"参加人数を入力してください")
+        return
     source_type=event.source.type
+    user_id=event.source.user_id
     if source_type=="group":
         project_id=event.source.groupId
     elif source_type=="room":
         project_id=event.source.roomId
-    user_id=event.source.user_id
+    else :
+        project_id=user_id
     user=line_bot_api.get_profile(user_id).display_name
-    # 本番ではelseの中に入れる
-    project_id=user_id
     if mes=="project":
         print(mes)
-        project[project_id]=Project("test",user)
-        res="{}がプロジェクトを作成しました".format(user)
+        project[project_id]=Project(,user,int(participants))
+        res="{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user,participants)
         send(event.reply_token,res)
     elif "log" in mes:
         log_data=project[project_id].log_data()
         send(event.reply_token,log_data)
     elif "add" in mes:
         project[project_id].pay_money(user,mes)
-    elif "accounting" in mes:
-        pass
+    elif "check" in mes:
+        project[project_id].check_payment()
 
 def send(_token,_textmessage):
     line_bot_api.reply_message(
