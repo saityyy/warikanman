@@ -73,7 +73,7 @@ class Project:
         members = {}
         sum = 0
         for data in self.commit_data:
-            pay_user_id = data["id"]
+            pay_user_id = str(data["id"])
             pay_money = data["pay_money"]
             pay_user_name = data["user"]
             if pay_user_id in members.keys():
