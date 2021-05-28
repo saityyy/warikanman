@@ -24,6 +24,7 @@ class Project:
 
     def log_data(self):
         log = ""
+        _sum = 0
         for i, data in enumerate(self.commit_data):
             d = data["commit_time"]
             if i > 0:
@@ -42,7 +43,8 @@ class Project:
                 log += "{}\n".format(data["user"])
                 log += "{}円\n".format(int(data["pay_money"]))
                 log += "{}\n\n".format(data["message"])
-        log += "合計 : {}円".format(int(self.sum))
+                _sum += data["pay_money"]
+        log += "合計 : {}円".format(_sum)
         return log
 
     def pay_money(self, user_id, user, message):
