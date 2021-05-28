@@ -52,13 +52,12 @@ def handle_message(event):
     source_type = event.source.type
     user_id = event.source.user_id
     if source_type == "group":
-        project_id = event.source.groupId
+        project_id = str(event.source.groupId)
     elif source_type == "room":
-        project_id = event.source.roomId
+        project_id = str(event.source.roomId)
     else:
-        project_id = user_id
+        project_id = str(user_id)
     send(event.reply_token, project_id)
-    send(event.reply_token, user_id)
     user = line_bot_api.get_profile(user_id).display_name
     if mes == "project":
         participants = re.sub(r"\D", "", mes)
