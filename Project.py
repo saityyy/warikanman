@@ -6,7 +6,6 @@ import pytz
 class Project:
     def __init__(self, user_id, user, participants):
         self.participants = participants
-        self.sum = 0
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         date = {
             "year": dt_now.year,
@@ -54,7 +53,9 @@ class Project:
             _, price = message.split()[:2]
             res_message = message.split()[2]
 
-        price = float(re.sub(r"\D", "", price))
+        price = re.sub(r"\D", "", price)
+        if len(price) == 0 or int(price) == 0:
+            return "有効な数字を入力してください"
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         date = {
             "year": dt_now.year,
@@ -67,13 +68,12 @@ class Project:
             "id": user_id,
             "user": user,
             "commit_time": date,
-            "pay_money": price,
+            "pay_money": float(price),
             "message": res_message
         })
-        self.sum += price
         result = "記録しました\n"
         result += "払った人：{}\n".format(user)
-        result += "払った金額：{}円\n".format(price)
+        result += "払った金額：{}円\n".format(float(price))
         result += "メッセージ：{}\n".format(res_message)
         return result
 
