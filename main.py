@@ -41,7 +41,7 @@ project = {}
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
-    if not mes[:3] in ["pro", "pay", "log", "che", "del"]:
+    if not mes[:3] in ["pro", "pay", "log", "che", "del", "hel"]:
         return
     source_type = event.source.type
     user_id = event.source.user_id
@@ -73,6 +73,21 @@ def handle_message(event):
         del_index = re.sub(r"\D", "", mes)
         result = project[project_id].delete_record(int(del_index))
         send(event.reply_token, result)
+    elif "help" in mes:
+        response_txt = "コマンド一覧"
+        response_txt += "project <参加人数>\n"
+        response_txt += "参加人数規模での割り勘プロジェクトを作成\n\n"
+        response_txt += "log\n"
+        response_txt += "支払履歴を確認する"
+        response_txt += "pay <支払った金額> <支払ったもの>\n"
+        response_txt += "誰が何に支払いをしたのかを記録します\n\n"
+        response_txt += "delete <番号>\n"
+        response_txt += "logの各記録に記載されている通し番号の記録を消します\n\n"
+        response_txt += "check\n"
+        response_txt += ("会計時に各メンバーが支払う料金を算出します"
+                         "(一度このコマンドを打っても履歴が消えることはありません)")
+        response_txt += "新たにprojectを作成するときはもう一度projectコマンドを送信してください"
+        send(event.reply_token, response_txt)
 
 
 def send(_token, _textmessage):
