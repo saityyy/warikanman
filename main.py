@@ -68,6 +68,7 @@ def handle_message(event):
         res = "{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user, participants)
         send(event.reply_token, res)
     elif "log" in mes:
+        print(project_id)
         log_data = project[project_id].log_data()
         send(event.reply_token, log_data)
     elif "add" in mes:
