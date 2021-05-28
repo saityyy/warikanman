@@ -51,8 +51,8 @@ project={}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes=str(event.message.text)
-    if not mes[:5] in ["pro","add","log","acc"]:
-        break
+    if not ["pro","add","log","acc"] in mes[:5]:
+        return 
     source_type=event.source.type
     if source_type=="group":
         project_id=event.source.groupId
