@@ -76,7 +76,8 @@ def handle_message(event):
         result = project[project_id].check_payment()
         send(event.reply_token, result)
     elif "delete" in mes:
-        result = project[project_id].delete_record()
+        del_index = re.sub(r"\D", "", mes)
+        result = project[project_id].delete_record(del_index)
         send(event.reply_token, result)
 
 
