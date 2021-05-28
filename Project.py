@@ -78,15 +78,15 @@ class Project:
             pay_user_name = data["user"]
             if pay_user_id not in members.keys():
                 members[pay_user_id] = {}
-                members[pay_user_id]["name"] = pay_user_name
+                members[pay_user_id]["pay_user_name"] = pay_user_name
                 members[pay_user_id]["pay_money"] = 0
             members[pay_user_id]["pay_money"] += pay_money
             sum += pay_money
         result = "集計結果\n\n"
         money_per_member = sum/self.participants
         for v in members.values():
-            result += "{} : +{}\n".format(v["name"],
-                                          v["money"]-money_per_member)
+            result += "{} : +{}\n".format(v["pay_user_name"],
+                                          abs(v["pay_money"]-money_per_member))
         other_num = self.participants-len(members)
         if other_num > 0:
             for other in range(other_num):
