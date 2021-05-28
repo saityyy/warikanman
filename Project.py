@@ -73,10 +73,10 @@ class Project:
         members = {}
         sum = 0
         for data in self.commit_data:
-            pay_user_id = str(data["id"])
+            pay_user_id = data["id"]
             pay_money = data["pay_money"]
             pay_user_name = data["user"]
-            if pay_user_id in members.keys():
+            if pay_user_id not in members.keys():
                 members[pay_user_id] = {}
                 members[pay_user_id]["name"] = pay_user_name
                 members[pay_user_id]["pay_money"] = 0
