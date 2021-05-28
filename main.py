@@ -62,13 +62,14 @@ def handle_message(event):
         participants = re.sub(r"\D", "", mes)
         if len(participants) == 0:
             send(event.reply_token, "参加人数を入力してください")
-            return
-        print(mes)
-        project[project_id] = Project(user, int(participants))
-        res = "{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user, participants)
-        send(event.reply_token, res)
+        else:
+            print(mes)
+            project[project_id] = Project(user, int(participants))
+            res = "{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user, int(participants))
+            send(event.reply_token, res)
     elif "log" in mes:
         print(project_id)
+        print(project)
         log_data = project[project_id].log_data()
         send(event.reply_token, log_data)
     elif "add" in mes:
