@@ -57,6 +57,8 @@ def handle_message(event):
         project_id = event.source.roomId
     else:
         project_id = user_id
+    send(event.reply_token, project_id)
+    send(event.reply_token, user_id)
     user = line_bot_api.get_profile(user_id).display_name
     if mes == "project":
         participants = re.sub(r"\D", "", mes)
