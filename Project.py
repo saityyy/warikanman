@@ -19,7 +19,7 @@ class Project:
             "id": user_id,
             "user": user,
             "commit_time": date,
-            "pay_money": -1,
+            "pay_money": 0,
             "message": "",
         }]
 
@@ -36,7 +36,7 @@ class Project:
                 d["hour"],
                 d["minute"],
             )
-            if data["pay_money"] == -1:
+            if data["pay_money"] == 0:
                 log += "{}がプロジェクトを作成しました\n".format(data["user"])
                 log += "参加人数：{}人\n\n".format(self.participants)
             else:
