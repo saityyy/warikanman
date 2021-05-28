@@ -53,11 +53,6 @@ project={}
 def handle_message(event):
     mes=str(event.message.text)
     if not mes[:3] in ["pro","add","log","che"]:
-        send(event.reply_token,"冒頭に有効なコマンドを入力してください")
-        return
-    participants=re.sub(r"\D","",mes)
-    if len(participants)==0:
-        send(event.reply_token,"参加人数を入力してください")
         return
     source_type=event.source.type
     user_id=event.source.user_id
@@ -69,6 +64,10 @@ def handle_message(event):
         project_id=user_id
     user=line_bot_api.get_profile(user_id).display_name
     if mes=="project":
+        participants=re.sub(r"\D","",mes)
+        if len(participants)==0:
+            send(event.reply_token,"参加人数を入力してください")
+            return
         print(mes)
         project[project_id]=Project(user,int(participants))
         res="{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user,participants)
