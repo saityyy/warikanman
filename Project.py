@@ -25,9 +25,10 @@ class Project:
 
     def log_data(self):
         log = ""
-        for data in self.commit_data:
+        for i, data in enumerate(self.commit_data):
             d = data["commit_time"]
-            log += "{}年{}月{}日 {}:{}\n".format(
+            log += "{}) {}年{}月{}日 {}:{}\n".format(
+                i,
                 d["year"],
                 d["month"],
                 d["day"],
@@ -68,6 +69,11 @@ class Project:
             "message": message
         })
         self.sum += price
+        result = "記録しました\n"
+        result += "払った人：{}".format(user)
+        result += "払った金額：{}".format(price)
+        result += "メッセージ：{}".format(message)
+        return result
 
     def check_payment(self):
         members = {}

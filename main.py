@@ -70,7 +70,8 @@ def handle_message(event):
         log_data = project[project_id].log_data()
         send(event.reply_token, log_data)
     elif "pay" in mes:
-        project[project_id].pay_money(user_id, user, mes)
+        result = project[project_id].pay_money(user_id, user, mes)
+        send(event.reply_token, result)
     elif "check" in mes:
         result = project[project_id].check_payment()
         send(event.reply_token, result)
