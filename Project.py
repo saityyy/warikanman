@@ -73,7 +73,7 @@ class Project:
         self.sum += price
         result = "記録しました\n"
         result += "払った人：{}\n".format(user)
-        result += "払った金額：{}\n".format(price)
+        result += "払った金額：{}円\n".format(price)
         result += "メッセージ：{}\n".format(res_message)
         return result
 
