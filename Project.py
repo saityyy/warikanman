@@ -49,7 +49,7 @@ class Project:
             _, price = message.split()
         else:
             _, price = message.split()[:2]
-            message = message.split()[2:]
+            message = message.split()[2]
 
         price = float(re.sub(r"\D", "", price))
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
