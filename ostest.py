@@ -5,4 +5,7 @@ b=a.split(" ")
 b=[i for i in b if len(i)>0]
 price="f2020年fjdf"
 price=float(re.sub(r"\D","",price))
-print(price)
+mes="project"
+print(mes[:5])
+if mes[:3] in ["pro"]:
+    print(mes[:3])
