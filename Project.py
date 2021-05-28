@@ -83,12 +83,15 @@ class Project:
             members[pay_user_id]["pay_money"] += pay_money
             _sum += pay_money
         result = "集計結果\n\n"
+        while(_sum % self.participants != 0):
+            _sum += 1
         money_per_member = _sum/self.participants
         for v in members.values():
-            result += "{} : +{}\n".format(v["pay_user_name"],
-                                          abs(v["pay_money"]-money_per_member))
+            result += "{} : {}円\n".format(v["pay_user_name"],
+                                          int(v["pay_money"]-money_per_member))
         other_num = self.participants-len(members)
         if other_num > 0:
             for other in range(other_num):
-                result += "{} : -{}\n".format("その他の参加者", money_per_member)
+                result += "{} : {}円\n".format("その他の参加者",
+                                              int(-money_per_member))
         return result
