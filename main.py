@@ -69,7 +69,7 @@ def handle_message(event):
     user=line_bot_api.get_profile(user_id).display_name
     if mes=="project":
         print(mes)
-        project[project_id]=Project(,user,int(participants))
+        project[project_id]=Project(user,int(participants))
         res="{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user,participants)
         send(event.reply_token,res)
     elif "log" in mes:
