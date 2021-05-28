@@ -47,7 +47,7 @@ project = {}
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
-    if not mes[:3] in ["pro", "add", "log", "che"]:
+    if not mes[:3] in ["pro", "pay", "log", "che"]:
         return
     source_type = event.source.type
     user_id = event.source.user_id
@@ -69,7 +69,7 @@ def handle_message(event):
     elif "log" in mes:
         log_data = project[project_id].log_data()
         send(event.reply_token, log_data)
-    elif "add" in mes:
+    elif "pay" in mes:
         project[project_id].pay_money(user, mes)
     elif "check" in mes:
         project[project_id].check_payment()

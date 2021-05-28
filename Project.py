@@ -42,7 +42,7 @@ class Project:
         return log
 
     def pay_money(self, user, message):
-        _, price, message = [mes for mes in message.split(" ") if len(mes) > 0]
+        _, price, message = message.split()
         price = float(re.sub(r"\D", "", price))
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         date = {
