@@ -31,10 +31,11 @@ class Project:
                 d["minute"],
             )
             if data["pay_money"]==-1:
-                log+="{}がプロジェクトを作成しました".format(data["user"])
+                log+="{}がプロジェクトを作成しました\n\n".format(data["user"])
             else:
                 log+="{}\n".format(data["user"])
-                log+="{}払いました\n".format(data["pay_money"])
+                log+="{}円\n".format(int(data["pay_money"]))
+                log+="{}\n\n".format(data["message"])
         return log
 
     
