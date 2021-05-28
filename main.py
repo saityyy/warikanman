@@ -15,7 +15,6 @@ import re
 from Project import Project
 
 app = Flask(__name__)
-# jsonで読み込むようにする.
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
 YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
@@ -41,6 +40,7 @@ project = {}
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
+    print("送信メッセージ : {}".format(mes))
     if not mes[:3] in ["pro", "pay", "log", "che", "del", "hel"]:
         return
     source_type = event.source.type
