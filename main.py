@@ -11,22 +11,19 @@ from linebot.models import (
 )
 import os
 import re
-import json
 
 from Project import Project
 
 app = Flask(__name__)
 # jsonで読み込むようにする.
-with open("./token.json") as f:
-    jsn = json.load(f)
-    YOUR_CHANNEL_ACCESS_TOKEN = jsn["YOUR_CHANNEL_ACCESS_TOKEN"]
-    YOUR_CHANNEL_SECRET = jsn["YOUR_CHANNEL_SECRET"]
+YOUR_CHANNEL_ACCESS_TOKEN = os.environ("YOUR_CHANNEL_ACCESS_TOKEN")
+YOUR_CHANNEL_SECRET = os.environ("YOUR_CHANNEL_SECRET")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
 
-@app.route("/callback", methods=['POST'])
+@ app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
@@ -41,7 +38,7 @@ def callback():
 project = {}
 
 
-@handler.add(MessageEvent, message=TextMessage)
+@ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
     if not mes[:3] in ["pro", "pay", "log", "che"]:
