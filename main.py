@@ -71,7 +71,7 @@ def handle_message(event):
         send(event.reply_token, result)
     elif "delete" in mes:
         del_index = re.sub(r"\D", "", mes)
-        result = project[project_id].delete_record(del_index)
+        result = project[project_id].delete_record(int(del_index))
         send(event.reply_token, result)
 
 
