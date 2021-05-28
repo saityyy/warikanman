@@ -11,19 +11,16 @@ from linebot.models import (
 )
 import os
 import re
+import json
 
 from Project import Project
 
 app = Flask(__name__)
 # jsonで読み込むようにする
-YOUR_CHANNEL_ACCESS_TOKEN = ("XLE95iVshxjGrMfiOHZqscHfN+"
-                             "ArdNOZV5ZkJSsxMewKlurJ2cORg"
-                             "cBqpeK9nnmNjT748hYdxbDrOHVRDyvWtsex"
-                             "hy3vTC+QLBPM5VcQSxikq7wkhAPlYNq"
-                             "CqGZZq+vKvB5IFvSoD8D"
-                             "2AKG0Fb2C0wdB04t89/1O/w1cDnyilFU=")
-
-YOUR_CHANNEL_SECRET = ("29c927a9604c6430ae09d4e2d7d256a1")
+with open("./token.json") as f:
+    jsn = json.load(f)
+    YOUR_CHANNEL_ACCESS_TOKEN = jsn["YOUR_CHANNEL_ACCESS_TOKEN"]
+    YOUR_CHANNEL_SECRET = jsn["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
