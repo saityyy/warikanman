@@ -59,5 +59,4 @@ class Project:
         })
 
     def check_payment(self):
-
-    
+        return
