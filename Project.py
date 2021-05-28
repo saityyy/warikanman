@@ -43,7 +43,7 @@ class Project:
                 log += "{}\n".format(data["user"])
                 log += "{}円\n".format(int(data["pay_money"]))
                 log += "{}\n\n".format(data["message"])
-        log += "合計 : {}".format(int(self.sum))
+        log += "合計 : {}円".format(int(self.sum))
         return log
 
     def pay_money(self, user_id, user, message):
