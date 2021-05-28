@@ -41,7 +41,7 @@ project = {}
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
-    if not mes[:3] in ["pro", "pay", "log", "che"]:
+    if not mes[:3] in ["pro", "pay", "log", "che", "del"]:
         return
     source_type = event.source.type
     user_id = event.source.user_id
@@ -52,7 +52,6 @@ def handle_message(event):
     else:
         project_id = str(user_id)
     user = line_bot_api.get_profile(user_id).display_name
-    print(mes)
     if "project" in mes:
         participants = re.sub(r"\D", "", mes)
         if len(participants) == 0:
@@ -71,13 +70,9 @@ def handle_message(event):
         result = project[project_id].check_payment()
         send(event.reply_token, result)
     elif "delete" in mes:
-        print(mes)
         del_index = re.sub(r"\D", "", mes)
-        print(del_index)
         result = project[project_id].delete_record(int(del_index))
         send(event.reply_token, result)
-    else:
-        print("else")
 
 
 def send(_token, _textmessage):
