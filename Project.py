@@ -28,7 +28,7 @@ class Project:
         for i, data in enumerate(self.commit_data):
             d = data["commit_time"]
             if i > 0:
-                log += i+")"
+                log += str(i)+")"
             log += "{}年{}月{}日 {}:{}\n".format(
                 d["year"],
                 d["month"],
