@@ -72,7 +72,8 @@ def handle_message(event):
     elif "pay" in mes:
         project[project_id].pay_money(user, mes)
     elif "check" in mes:
-        project[project_id].check_payment()
+        result = project[project_id].check_payment()
+        send(event.reply_token, result)
 
 
 def send(_token, _textmessage):
