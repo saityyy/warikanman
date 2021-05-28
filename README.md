@@ -29,4 +29,4 @@ checkコマンドにより誰がいくら支払うかの一覧を表示する。
 # 履歴を消去する
 delete <通し番号> コマンドによってlogに表示される番号の履歴を消去できる
 
-![6](https://user-images.githubusercontent.com/62131533/119940215-d5216780-bfc9-11eb-883d-a45f8485b348.png)
+![6](https://user-images.githubusercontent.com/62131533/119941994-419d6600-bfcc-11eb-9bc3-dd83940c3a0e.png)
