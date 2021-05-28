@@ -41,6 +41,7 @@ project = {}
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     mes = str(event.message.text)
+    print(mes)
     if not mes[:3] in ["pro", "pay", "log", "che"]:
         return
     source_type = event.source.type

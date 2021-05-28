@@ -80,7 +80,7 @@ class Project:
         return result
 
     def delete_record(self, index):
-        if index > 0:
+        if 0 < index < len(self.commit_data):
             del self.commit_data[index]
             return "削除しました"
         else:
