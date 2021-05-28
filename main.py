@@ -75,6 +75,9 @@ def handle_message(event):
     elif "check" in mes:
         result = project[project_id].check_payment()
         send(event.reply_token, result)
+    elif "delete" in mes:
+        result = project[project_id].delete_record()
+        send(event.reply_token, result)
 
 
 def send(_token, _textmessage):

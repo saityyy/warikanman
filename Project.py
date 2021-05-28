@@ -27,8 +27,9 @@ class Project:
         log = ""
         for i, data in enumerate(self.commit_data):
             d = data["commit_time"]
-            log += "{}) {}年{}月{}日 {}:{}\n".format(
-                i,
+            if i > 0:
+                log += i+")"
+            log += "{}年{}月{}日 {}:{}\n".format(
                 d["year"],
                 d["month"],
                 d["day"],
@@ -46,7 +47,7 @@ class Project:
         return log
 
     def pay_money(self, user_id, user, message):
-        res_message = ""
+        res_message = "なし"
         if len(message.split()) == 2:
             _, price = message.split()
         else:
@@ -75,6 +76,13 @@ class Project:
         result += "払った金額：{}\n".format(price)
         result += "メッセージ：{}\n".format(res_message)
         return result
+
+    def delete_record(self, index):
+        if index > 0:
+            del self.commit_data[index]
+            return "削除しました"
+        else:
+            return "有効な番号を指定してください"
 
     def check_payment(self):
         members = {}
