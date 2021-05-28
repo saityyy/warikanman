@@ -99,8 +99,8 @@ class Project:
             _sum += pay_money
         money_per_member = _sum/self.participants
         result = "集計結果\n\n"
-        result += "合計金額 : {}\n".format(_sum)
-        result += "一人あたりの金額 : {}\n\n".format(money_per_member)
+        result += "合計金額 : {}円\n".format(_sum)
+        result += "一人あたりの金額 : {}円\n\n".format(money_per_member)
         for v in members.values():
             result += "{} : {}円\n".format(v["pay_user_name"],
                                           v["pay_money"]-money_per_member)
