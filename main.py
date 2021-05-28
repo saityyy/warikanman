@@ -16,7 +16,7 @@ import json
 from Project import Project
 
 app = Flask(__name__)
-# jsonで読み込むようにする
+# jsonで読み込むようにする.
 with open("./token.json") as f:
     jsn = json.load(f)
     YOUR_CHANNEL_ACCESS_TOKEN = jsn["YOUR_CHANNEL_ACCESS_TOKEN"]
