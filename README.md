@@ -1,5 +1,5 @@
 # warikanman
-割り勘してくれるLINEbot
+割り勘してくれるLINEbot -> @634vjnid
 
 # helpでコマンド一覧
 
@@ -21,12 +21,12 @@ logコマンドでプロジェクトが作成されてからの支払履歴が�
 ![4](https://user-images.githubusercontent.com/62131533/119940217-d5b9fe00-bfc9-11eb-9a68-bd243820b6ea.png)
 
 # 割り勘する
-checkコマンドにより誰がいくら支払うかの一覧を表示する。
-*checkコマンドを送信してもプロジェクトやログのデータが消去されることはない
+checkコマンドにより誰がいくら支払うかの一覧を表示する。  
+※checkコマンドを送信してもプロジェクトやログのデータが消去されることはない
 
 ![5](https://user-images.githubusercontent.com/62131533/119940213-d3f03a80-bfc9-11eb-85aa-14cd6bb13dc8.png)
 
 # 履歴を消去する
 delete <通し番号> コマンドによってlogに表示される番号の履歴を消去できる
 
-![6](https://user-images.githubusercontent.com/62131533/119940215-d5216780-bfc9-11eb-883d-a45f8485b348.png)
+![6](https://user-images.githubusercontent.com/62131533/119941994-419d6600-bfcc-11eb-9bc3-dd83940c3a0e.png)
