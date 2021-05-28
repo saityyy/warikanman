@@ -52,9 +52,9 @@ def handle_message(event):
     source_type = event.source.type
     user_id = event.source.user_id
     if source_type == "group":
-        project_id = str(event.source.groupId)
+        project_id = str(event.source.group_id)
     elif source_type == "room":
-        project_id = str(event.source.roomId)
+        project_id = str(event.source.room_id)
     else:
         project_id = str(user_id)
     user = line_bot_api.get_profile(user_id).display_name

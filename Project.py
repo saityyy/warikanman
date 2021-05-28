@@ -71,7 +71,7 @@ class Project:
 
     def check_payment(self):
         members = {}
-        sum = 0
+        _sum = 0
         for data in self.commit_data:
             pay_user_id = data["id"]
             pay_money = data["pay_money"]
@@ -81,9 +81,9 @@ class Project:
                 members[pay_user_id]["pay_user_name"] = pay_user_name
                 members[pay_user_id]["pay_money"] = 0
             members[pay_user_id]["pay_money"] += pay_money
-            sum += pay_money
+            _sum += pay_money
         result = "集計結果\n\n"
-        money_per_member = sum/self.participants
+        money_per_member = _sum/self.participants
         for v in members.values():
             result += "{} : +{}\n".format(v["pay_user_name"],
                                           abs(v["pay_money"]-money_per_member))
