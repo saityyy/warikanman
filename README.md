@@ -1,4 +1,4 @@
-# warikankun
+# warikanman
 割り勘してくれるLINEbot
 
 # helpでコマンド一覧
