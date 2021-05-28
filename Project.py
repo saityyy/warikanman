@@ -4,7 +4,7 @@ import pytz
 
 
 class Project:
-    def __init__(self, user, participants):
+    def __init__(self, user_id, user, participants):
         self.participants = participants
         self.sum = 0
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
@@ -16,6 +16,7 @@ class Project:
             "minute": dt_now.minute,
         }
         self.commit_data = [{
+            "id": user_id,
             "user": user,
             "commit_time": date,
             "pay_money": -1,
@@ -40,11 +41,16 @@ class Project:
                 log += "{}\n".format(data["user"])
                 log += "{}円\n".format(int(data["pay_money"]))
                 log += "{}\n\n".format(data["message"])
-        log += "合計 : {}".format(self.sum)
+        log += "合計 : {}".format(int(self.sum))
         return log
 
-    def pay_money(self, user, message):
-        _, price, message = message.split()
+    def pay_money(self, user_id, user, message):
+        if len(message.split()) == 2:
+            _, price = message.split()
+        else:
+            _, price = message.split()[:2]
+            message = message.split()[2:]
+
         price = float(re.sub(r"\D", "", price))
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         date = {
@@ -55,6 +61,7 @@ class Project:
             "minute": dt_now.minute,
         }
         self.commit_data.append({
+            "id": user_id,
             "user": user,
             "commit_time": date,
             "pay_money": price,
@@ -66,18 +73,22 @@ class Project:
         members = {}
         sum = 0
         for data in self.commit_data:
-            pay_user = data["user"]
+            pay_user_id = data["id"]
             pay_money = data["pay_money"]
-            if pay_user in members.keys():
-                members[pay_user] = 0
-            members[pay_user] += pay_money
+            pay_user_name = data["user"]
+            if pay_user_id in members.keys():
+                members[pay_user_id] = {}
+                members[pay_user_id]["name"] = pay_user_name
+                members[pay_user_id]["pay_money"] = 0
+            members[pay_user_id]["pay_money"] += pay_money
             sum += pay_money
         result = "集計結果\n\n"
-        for member, money in members.items():
-            result += "{} : +{}\n".format(member, money)
+        money_per_member = sum/self.participants
+        for v in members.values():
+            result += "{} : +{}\n".format(v["name"],
+                                          v["money"]-money_per_member)
         other_num = self.participants-len(members)
-        money_per_member = sum/other_num
-        for other in range(self.participants-len(members)):
-            result += "{} : -{}\n".format(member, money_per_member)
-
+        if other_num > 0:
+            for other in range(other_num):
+                result += "{} : -{}\n".format("その他の参加者", money_per_member)
         return result

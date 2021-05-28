@@ -15,7 +15,7 @@ import re
 from Project import Project
 
 app = Flask(__name__)
-
+# jsonで読み込むようにする
 YOUR_CHANNEL_ACCESS_TOKEN = ("XLE95iVshxjGrMfiOHZqscHfN+"
                              "ArdNOZV5ZkJSsxMewKlurJ2cORg"
                              "cBqpeK9nnmNjT748hYdxbDrOHVRDyvWtsex"
@@ -63,14 +63,14 @@ def handle_message(event):
         if len(participants) == 0:
             send(event.reply_token, "参加人数を入力してください")
         else:
-            project[project_id] = Project(user, int(participants))
+            project[project_id] = Project(id, user, int(participants))
             res = "{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user, int(participants))
             send(event.reply_token, res)
     elif "log" in mes:
         log_data = project[project_id].log_data()
         send(event.reply_token, log_data)
     elif "pay" in mes:
-        project[project_id].pay_money(user, mes)
+        project[project_id].pay_money(id, user, mes)
     elif "check" in mes:
         result = project[project_id].check_payment()
         send(event.reply_token, result)
