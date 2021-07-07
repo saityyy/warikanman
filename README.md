@@ -1,5 +1,5 @@
 # warikanman
-割り勘してくれるLINEbot -> @634vjnid
+割り勘してくれるLINEbot
 
 # helpでコマンド一覧
 
