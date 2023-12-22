@@ -1,4 +1,6 @@
 from flask import Flask, request, abort
+import mysql.connector
+from functions import *
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -13,6 +15,7 @@ import os
 import re
 
 from Project import Project
+from functions import functions
 
 app = Flask(__name__)
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
@@ -21,6 +24,12 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+conn=mysql.connector.connect(
+    user="warikanman",
+    password="warikanman",
+    host="127.0.0.1",
+    database="warikanman"
+)
 
 @ app.route("/callback", methods=['POST'])
 def callback():
@@ -34,15 +43,18 @@ def callback():
     return 'OK'
 
 
+TEMP_TIMESTAMP="2020-01-01 00:00:00"
 project = {}
 
 
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    if not conn.is_connected():
+        raise Exception("failed connect mysql")
+    else:
+        print("success connect mysql")
     mes = str(event.message.text)
     print("送信メッセージ : {}".format(mes))
-    if not mes[:3] in ["pro", "pay", "log", "che", "del", "hel"]:
-        return
     source_type = event.source.type
     user_id = event.source.user_id
     if source_type == "group":
@@ -52,42 +64,34 @@ def handle_message(event):
     else:
         project_id = str(user_id)
     user = line_bot_api.get_profile(user_id).display_name
-    if "project" in mes:
-        participants = re.sub(r"\D", "", mes)
-        if len(participants) == 0:
-            send(event.reply_token, "参加人数を入力してください")
-        else:
-            project[project_id] = Project(user_id, user, int(participants))
-            res = "{}が参加人数{}人の割り勘プロジェクトを作成しました".format(user, int(participants))
-            send(event.reply_token, res)
-    elif "log" in mes:
-        log_data = project[project_id].log_data()
-        send(event.reply_token, log_data)
-    elif "pay" in mes:
-        result = project[project_id].pay_money(user_id, user, mes)
-        send(event.reply_token, result)
-    elif "check" in mes:
-        result = project[project_id].check_payment()
-        send(event.reply_token, result)
-    elif "delete" in mes:
-        del_index = re.sub(r"\D", "", mes)
-        result = project[project_id].delete_record(int(del_index))
-        send(event.reply_token, result)
-    elif "help" in mes:
-        response_txt = "コマンド一覧\n\n"
-        response_txt += "・project <参加人数>\n"
-        response_txt += "参加人数規模での割り勘プロジェクトを作成\n\n"
-        response_txt += "・log\n"
-        response_txt += "支払履歴を確認する\n\n"
-        response_txt += "・pay <支払った金額> <支払ったもの>\n"
-        response_txt += "誰が何に支払いをしたのかを記録します\n\n"
-        response_txt += "・delete <番号>\n"
-        response_txt += "logの各記録に記載されている通し番号の記録を消します\n\n"
-        response_txt += "・check\n"
-        response_txt += "会計時に各メンバーが支払う料金を算出します"
-        response_txt += "(一度このコマンドを打っても履歴が消えることはありません)\n\n"
-        response_txt += "新たにprojectを作成するときはもう一度projectコマンドを送信してください"
-        send(event.reply_token, response_txt)
+    message_result=functions.parse_message(mes)
+    print(message_result)
+    if message_result["type"]=="pass":
+        pass
+    elif not message_result["isValid"]:
+        send(event.reply_token, message_result["error_message"])
+    elif message_result["type"]=="project":
+        participant_number=int(message_result["args"])
+        res=functions.create_projects(conn,project_id , participant_number)
+        send(event.reply_token, res)
+    elif message_result["type"]=="log":
+        res=functions.check_payments_log(conn,project_id)
+        send(event.reply_token, res)
+    elif message_result["type"]=="pay":
+        amount,message=message_result["args"]
+        res=functions.add_payment(conn,project_id,user_id,user,TEMP_TIMESTAMP,amount,message)
+        send(event.reply_token, res)
+    elif message_result["type"]=="check":
+        res=functions.warikan(conn,project_id)
+        send(event.reply_token, res)
+    elif message_result["type"]=="delete":
+        del_index=message_result["args"]
+        res=functions.delete_payment(conn,project_id,int(del_index))
+        send(event.reply_token, res)
+    elif message_result["type"]=="help":
+        f=open("./help.txt")
+        send(event.reply_token, f.read())
+        f.close()
 
 
 def send(_token, _textmessage):

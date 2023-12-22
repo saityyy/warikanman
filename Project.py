@@ -4,7 +4,10 @@ import pytz
 
 
 class Project:
-    def __init__(self, user_id, user, participants):
+    def __init__(self, conn,user_id, user, participants):
+        cur=conn.cursor(dictionary=True)
+        result=cur.execute("INSERT INTO projects (participant_number) VALUES(3);")
+        conn.commit()
         self.participants = participants
         dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
         date = {
@@ -22,7 +25,7 @@ class Project:
             "message": "",
         }]
 
-    def log_data(self):
+    def log_data(self,conn):
         log = ""
         _sum = 0
         for i, data in enumerate(self.commit_data):
@@ -47,7 +50,7 @@ class Project:
         log += "合計 : {}円".format(_sum)
         return log
 
-    def pay_money(self, user_id, user, message):
+    def pay_money(self, conn,user_id, user, message):
         res_message = "なし"
         if len(message.split()) == 2:
             _, price = message.split()
