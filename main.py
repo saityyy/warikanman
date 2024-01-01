@@ -14,7 +14,6 @@ from linebot.models import (
 import os
 import re
 
-from Project import Project
 from functions import functions
 
 app = Flask(__name__)
@@ -24,12 +23,14 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
-conn=mysql.connector.connect(
+conn = mysql.connector.connect(
     user="warikanman",
     password="warikanman",
     host="127.0.0.1",
     database="warikanman"
 )
+conn.ping(reconnect=True)
+
 
 @ app.route("/callback", methods=['POST'])
 def callback():
@@ -43,16 +44,15 @@ def callback():
     return 'OK'
 
 
-TEMP_TIMESTAMP="2020-01-01 00:00:00"
+TEMP_TIMESTAMP = "2020-01-01 00:00:00"
 project = {}
 
 
 @ handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+
     if not conn.is_connected():
-        raise Exception("failed connect mysql")
-    else:
-        print("success connect mysql")
+        conn.ping(reconnect=True, attempts=3, delay=3)
     mes = str(event.message.text)
     print("送信メッセージ : {}".format(mes))
     source_type = event.source.type
@@ -64,32 +64,33 @@ def handle_message(event):
     else:
         project_id = str(user_id)
     user = line_bot_api.get_profile(user_id).display_name
-    message_result=functions.parse_message(mes)
+    message_result = functions.parse_message(mes)
     print(message_result)
-    if message_result["type"]=="pass":
+    if message_result["type"] == "pass":
         pass
     elif not message_result["isValid"]:
         send(event.reply_token, message_result["error_message"])
-    elif message_result["type"]=="project":
-        participant_number=int(message_result["args"])
-        res=functions.create_projects(conn,project_id , participant_number)
+    elif message_result["type"] == "project":
+        participant_number = int(message_result["args"])
+        res = functions.create_projects(conn, project_id, participant_number)
         send(event.reply_token, res)
-    elif message_result["type"]=="log":
-        res=functions.check_payments_log(conn,project_id)
+    elif message_result["type"] == "log":
+        res = functions.check_payments_log(conn, project_id)
         send(event.reply_token, res)
-    elif message_result["type"]=="pay":
-        amount,message=message_result["args"]
-        res=functions.add_payment(conn,project_id,user_id,user,TEMP_TIMESTAMP,amount,message)
+    elif message_result["type"] == "pay":
+        amount, message = message_result["args"]
+        res = functions.add_payment(
+            conn, project_id, user_id, user, TEMP_TIMESTAMP, amount, message)
         send(event.reply_token, res)
-    elif message_result["type"]=="check":
-        res=functions.warikan(conn,project_id)
+    elif message_result["type"] == "check":
+        res = functions.warikan(conn, project_id)
         send(event.reply_token, res)
-    elif message_result["type"]=="delete":
-        del_index=message_result["args"]
-        res=functions.delete_payment(conn,project_id,int(del_index))
+    elif message_result["type"] == "delete":
+        del_index = message_result["args"]
+        res = functions.delete_payment(conn, project_id, int(del_index))
         send(event.reply_token, res)
-    elif message_result["type"]=="help":
-        f=open("./help.txt")
+    elif message_result["type"] == "help":
+        f = open("./help.txt")
         send(event.reply_token, f.read())
         f.close()
 
