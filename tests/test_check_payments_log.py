@@ -37,13 +37,13 @@ class Test(unittest.TestCase):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
         result = add_payment(self.conn, gid, 1, "user1",
-                             TEMP_DATETIME, 1000, "message1")
+                             TEMP_DATETIME+datetime.timedelta(minutes=10), 1000, "message1")
         result = add_payment(self.conn, gid, 2, "user2",
-                             TEMP_DATETIME, 2000, "message2")
+                             TEMP_DATETIME+datetime.timedelta(minutes=20), 2000, "message2")
         result = add_payment(self.conn, gid, 3, "user3",
-                             TEMP_DATETIME, 3000, "message3")
+                             TEMP_DATETIME+datetime.timedelta(minutes=30), 3000, "message3")
         result = add_payment(self.conn, gid, 1, "user1",
-                             TEMP_DATETIME, 1000, "message4")
+                             TEMP_DATETIME+datetime.timedelta(minutes=40), 1000, "message4")
         result = check_payments_log(self.conn, gid)
         f = open("./tests/txt/test_check_payments_log_a")
         self.assertEqual(result, f.read())

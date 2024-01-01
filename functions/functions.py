@@ -1,4 +1,4 @@
-TEMP_TIMESTAMP = "2020-01-01 00:00:00"
+from pprint import pprint
 
 
 def create_projects(conn, date_time, group_id, participant_number):
@@ -8,7 +8,7 @@ def create_projects(conn, date_time, group_id, participant_number):
     if len(cur.fetchall()) > 0:
         cur.execute("DELETE FROM projects WHERE group_id=%s;", (group_id,))
     cur.execute("INSERT INTO projects (group_id,datetime,participant_number) VALUES(%s,%s,%s);",
-                (group_id, TEMP_TIMESTAMP, participant_number))
+                (group_id, date_time, participant_number))
     conn.commit()
     res = "参加人数{}人の割り勘プロジェクトを作成しました".format(participant_number)
     return res
@@ -43,13 +43,15 @@ def check_payments_log(conn, group_id):
     query = """
         SELECT id,datetime,(SELECT name from users WHERE user_id=p.user_id) user_name,
         amount,message FROM payments p WHERE project_id=
-        (SELECT project_id FROM projects WHERE group_id=%s);
+        (SELECT project_id FROM projects WHERE group_id=%s)
+        ORDER BY datetime ASC;
     """
     cur.execute(query, (group_id,))
     res = ""
     result = cur.fetchall()
-    for row in result:
-        res += "{}) {}\n".format(row["id"], row["datetime"])
+    for idx, row in enumerate(result, start=1):
+        datetime_str = row["datetime"].strftime("%-m/%-d %-H:%M")
+        res += "{}) {}\n".format(idx, datetime_str)
         res += "{}\n{}円\n{}\n\n".format(row["user_name"],
                                         row["amount"], row["message"])
     res += "合計 : {}円".format(sum([row["amount"] for row in result]))
@@ -81,15 +83,16 @@ def warikan(conn, group_id):
         user2amount[row["user_name"]] += row["amount"]
     fraction = total_amount % participant_number
     amount_per_user = int(total_amount/participant_number)
-    res = "集計結果\n"
-    res += "合計金額 : {}円\n".format(total_amount)
+    res = "合計金額 : {}円\n".format(total_amount)
     res += "参加人数 : {}人\n".format(participant_number)
     res += "一人あたりの金額 : {}円\n\n".format(amount_per_user)
     res += "端数 : {}円\n\n".format(fraction)
     for name, amount in user2amount.items():
         res += "{} : {}円".format(name, amount)
-        res += "（＋" if amount > amount_per_user else "（－"
-        res += "{}円）\n".format(abs(amount-amount_per_user))
+        if amount > amount_per_user:
+            res += "（{}円もらう）\n".format(amount-amount_per_user)
+        else:
+            res += "（{}円はらう）\n".format(amount_per_user-amount)
     other_num = participant_number-len(user2amount)
     if other_num > 0:
         for _ in range(other_num):
@@ -98,11 +101,22 @@ def warikan(conn, group_id):
     return res
 
 
-def delete_payment(conn, group_id, index):
+def delete_payment(conn, group_id, delete_number):
+    # project_idが一致するものをdatetimeでソートして、古い方からindex番目のものを削除
+    query = """
+        SELECT id FROM payments WHERE project_id=
+        (SELECT project_id FROM projects WHERE group_id=%s)
+        ORDER BY datetime ASC;
+    """
     cur = conn.cursor(dictionary=True)
-    cur.execute("DELETE FROM payments WHERE id=%s;", (index,))
+    cur.execute(query, (group_id,))
+    result = cur.fetchall()
+    if not (0 <= delete_number-1 < len(result)):
+        return "その番号の記録は存在しません"
+    cur.execute("DELETE FROM payments WHERE id=%s;",
+                (result[delete_number-1]["id"],))
     conn.commit()
-    return "{}番の記録を削除しました".format(index)
+    return "{}番の記録を削除しました".format(delete_number)
 
 
 def extract_message(message):

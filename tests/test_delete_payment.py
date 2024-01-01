@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
 
         self.conn.commit()
 
-    def test_delete_payment_a(self):
+    def test_delete_payment(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
         _ = add_payment(self.conn, gid, 1, "user1",
@@ -44,11 +44,37 @@ class Test(unittest.TestCase):
                         TEMP_DATETIME, 3000, "message3")
         _ = add_payment(self.conn, gid, 1, "user1",
                         TEMP_DATETIME, 1000, "message4")
-        result = delete_payment(self.conn, gid, 4)
-        self.assertEqual(result, "{}番の記録を削除しました".format(4))
+        result = delete_payment(self.conn, gid, 1)
+        self.assertEqual(result, "1番の記録を削除しました")
         cur = self.conn.cursor(dictionary=True)
-        cur.execute("SELECT * FROM payments WHERE id=4;")
+        cur.execute("SELECT * FROM payments WHERE message=%s;", ("message1",))
         self.assertEqual(cur.fetchall(), [])
+
+    # すべての記録を削除した場合
+    def test_delete_payment_alldelete(self):
+        gid = random_group_id()
+        _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
+        _ = add_payment(self.conn, gid, 1, "user1",
+                        TEMP_DATETIME, 1000, "message1")
+        _ = add_payment(self.conn, gid, 2, "user2",
+                        TEMP_DATETIME, 2000, "message2")
+        _ = add_payment(self.conn, gid, 3, "user3",
+                        TEMP_DATETIME, 3000, "message3")
+        _ = delete_payment(self.conn, gid, 1)
+        _ = delete_payment(self.conn, gid, 1)
+        _ = delete_payment(self.conn, gid, 1)
+        cur = self.conn.cursor(dictionary=True)
+        cur.execute("SELECT * FROM payments")
+        self.assertEqual(cur.fetchall(), [])
+
+    # 指定の番号の記録が存在しない場合
+    def test_delete_payment_norecord(self):
+        gid = random_group_id()
+        _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
+        _ = add_payment(self.conn, gid, 1, "user1",
+                        TEMP_DATETIME, 1000, "message1")
+        result = delete_payment(self.conn, gid, -1)
+        self.assertEqual(result, "その番号の記録は存在しません")
 
     def tearDown(self):
         cur = self.conn.cursor(dictionary=True)
