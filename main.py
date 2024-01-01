@@ -1,6 +1,6 @@
 from flask import Flask, request, abort
 import mysql.connector
-from functions import *
+import datetime
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -11,8 +11,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+from zoneinfo import ZoneInfo
 import os
-import re
 
 from functions import functions
 
@@ -29,7 +29,6 @@ conn = mysql.connector.connect(
     host="127.0.0.1",
     database="warikanman"
 )
-conn.ping(reconnect=True)
 
 
 @ app.route("/callback", methods=['POST'])
@@ -54,6 +53,8 @@ def handle_message(event):
     if not conn.is_connected():
         conn.ping(reconnect=True, attempts=3, delay=3)
     mes = str(event.message.text)
+    date_time = datetime.datetime.fromtimestamp(int(event.timestamp/1000),
+                                                tz=ZoneInfo("Asia/Tokyo"))
     print("送信メッセージ : {}".format(mes))
     source_type = event.source.type
     user_id = event.source.user_id
@@ -64,7 +65,7 @@ def handle_message(event):
     else:
         project_id = str(user_id)
     user = line_bot_api.get_profile(user_id).display_name
-    message_result = functions.parse_message(mes)
+    message_result = functions.extract_message(mes)
     print(message_result)
     if message_result["type"] == "pass":
         pass
@@ -72,7 +73,8 @@ def handle_message(event):
         send(event.reply_token, message_result["error_message"])
     elif message_result["type"] == "project":
         participant_number = int(message_result["args"])
-        res = functions.create_projects(conn, project_id, participant_number)
+        res = functions.create_projects(
+            conn, date_time, project_id, participant_number)
         send(event.reply_token, res)
     elif message_result["type"] == "log":
         res = functions.check_payments_log(conn, project_id)
@@ -80,7 +82,7 @@ def handle_message(event):
     elif message_result["type"] == "pay":
         amount, message = message_result["args"]
         res = functions.add_payment(
-            conn, project_id, user_id, user, TEMP_TIMESTAMP, amount, message)
+            conn, project_id, user_id, user, date_time, amount, message)
         send(event.reply_token, res)
     elif message_result["type"] == "check":
         res = functions.warikan(conn, project_id)
