@@ -9,7 +9,7 @@ TEMP_DATETIME = datetime.datetime(2020, 1, 1, 0, 0, 0)
 
 
 def random_group_id():
-    return random.randint(1, 100000)
+    return str(random.randint(1, 100000))
 
 
 class Test(unittest.TestCase):

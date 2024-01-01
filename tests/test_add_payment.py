@@ -9,7 +9,7 @@ TEMP_DATETIME = datetime.datetime(2020, 1, 1, 0, 0, 0)
 
 
 def random_group_id():
-    return random.randint(1, 100000)
+    return str(random.randint(1, 100000))
 
 
 class Test(unittest.TestCase):
@@ -57,6 +57,12 @@ class Test(unittest.TestCase):
         f = open("./tests/txt/test_add_payment_rename")
         self.assertEqual(result, f.read())
         f.close()
+
+    def test_add_payment_noproject(self):
+        gid = random_group_id()
+        result = add_payment(self.conn, gid, 0, "user0",
+                             TEMP_DATETIME, 1000, "メッセージ")
+        self.assertEqual(result, "プロジェクトが存在しません")
 
     def tearDown(self):
         cur = self.conn.cursor(dictionary=True)

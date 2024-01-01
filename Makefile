@@ -17,6 +17,10 @@ dreload:
 access-db:
 	mysql -u warikanman -pwarikanman warikanman
 
+.PHONY: test
+test:
+	python -m unittest 
+
 .PHONY: deploy_config
 deploy_config:
 	cp /home/ubuntu/warikanman/deploy_config/nginx/default /etc/nginx/sites-available/default

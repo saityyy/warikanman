@@ -1,23 +1,23 @@
-from pprint import pprint
 
 
-def create_projects(conn, date_time, group_id, participant_number):
+def create_projects(conn, date_time, project_id, participant_number):
     cur = conn.cursor(dictionary=True)
     # すでにプロジェクトが存在する場合は削除
-    cur.execute("SELECT * FROM projects WHERE group_id=%s;", (group_id,))
+    cur.execute("SELECT * FROM projects WHERE project_id=%s;", (project_id,))
     if len(cur.fetchall()) > 0:
-        cur.execute("DELETE FROM projects WHERE group_id=%s;", (group_id,))
-    cur.execute("INSERT INTO projects (group_id,datetime,participant_number) VALUES(%s,%s,%s);",
-                (group_id, date_time, participant_number))
+        cur.execute("DELETE FROM projects WHERE project_id=%s;", (project_id,))
+    cur.execute("INSERT INTO projects (project_id,datetime,participant_number) VALUES(%s,%s,%s);",
+                (project_id, date_time, participant_number))
     conn.commit()
     res = "参加人数{}人の割り勘プロジェクトを作成しました".format(participant_number)
     return res
 
 
-def add_payment(conn, group_id, user_id, name, date_time, amount, message):
+def add_payment(conn, project_id, user_id, name, date_time, amount, message):
     cur = conn.cursor(dictionary=True)
-    cur.execute("SELECT * FROM projects WHERE group_id=%s;", (group_id,))
-    project_id = cur.fetchall()[0]["id"]
+    cur.execute("SELECT * FROM projects WHERE project_id=%s;", (project_id,))
+    if len(cur.fetchall()) == 0:
+        return "プロジェクトが存在しません"
     cur.execute("SELECT name FROM users WHERE user_id=%s;", (user_id,))
     result = cur.fetchall()
     # ユーザーが存在しない場合は追加
@@ -38,16 +38,19 @@ def add_payment(conn, group_id, user_id, name, date_time, amount, message):
     return res
 
 
-def check_payments_log(conn, group_id):
+def check_payments_log(conn, project_id):
     cur = conn.cursor(dictionary=True)
+    cur.execute(
+        "SELECT participant_number FROM projects WHERE project_id=%s;", (project_id,))
+    participant_number = cur.fetchall()[0]["participant_number"]
     query = """
         SELECT id,datetime,(SELECT name from users WHERE user_id=p.user_id) user_name,
         amount,message FROM payments p WHERE project_id=
-        (SELECT project_id FROM projects WHERE group_id=%s)
+        (SELECT project_id FROM projects WHERE project_id=%s)
         ORDER BY datetime ASC;
     """
-    cur.execute(query, (group_id,))
-    res = ""
+    cur.execute(query, (project_id,))
+    res = "割り勘参加人数：{}人\n\n".format(participant_number)
     result = cur.fetchall()
     for idx, row in enumerate(result, start=1):
         datetime_str = row["datetime"].strftime("%-m/%-d %-H:%M")
@@ -59,19 +62,18 @@ def check_payments_log(conn, group_id):
     return res
 
 
-def warikan(conn, group_id):
+def warikan(conn, project_id):
     cur = conn.cursor(dictionary=True)
     # paymentsテーブルからプロジェクトIDが一致するものを取得
     query = """
         SELECT (SELECT name from users WHERE user_id=p.user_id) user_name,
-        amount,message FROM payments p WHERE project_id=
-        (SELECT project_id FROM projects WHERE group_id=%s);
+        amount,message FROM payments p WHERE project_id=%s;
     """
-    cur.execute(query, (group_id,))
+    cur.execute(query, (project_id,))
     result = cur.fetchall()
     # project's participants number
     cur.execute(
-        "SELECT participant_number FROM projects WHERE group_id=%s;", (group_id,))
+        "SELECT participant_number FROM projects WHERE project_id=%s;", (project_id,))
     participant_number = cur.fetchall()[0]["participant_number"]
     user2amount = {}
     # 合計金額を計算
@@ -96,20 +98,20 @@ def warikan(conn, group_id):
     other_num = participant_number-len(user2amount)
     if other_num > 0:
         for _ in range(other_num):
-            res += "{} : {}円\n".format("その他の参加者", -amount_per_user)
+            res += "その他の参加者：0円（{}円はらう）\n".format(amount_per_user)
     res = res[:-1]
     return res
 
 
-def delete_payment(conn, group_id, delete_number):
+def delete_payment(conn, project_id, delete_number):
     # project_idが一致するものをdatetimeでソートして、古い方からindex番目のものを削除
     query = """
         SELECT id FROM payments WHERE project_id=
-        (SELECT project_id FROM projects WHERE group_id=%s)
+        (SELECT project_id FROM projects WHERE project_id=%s)
         ORDER BY datetime ASC;
     """
     cur = conn.cursor(dictionary=True)
-    cur.execute(query, (group_id,))
+    cur.execute(query, (project_id,))
     result = cur.fetchall()
     if not (0 <= delete_number-1 < len(result)):
         return "その番号の記録は存在しません"

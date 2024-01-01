@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_TIMESTAMP, gid, 3)
         cur = self.conn.cursor(dictionary=True)
-        cur.execute("SELECT * FROM projects WHERE group_id=%s;", (gid,))
+        cur.execute("SELECT * FROM projects WHERE project_id=%s;", (gid,))
         result_sql = cur.fetchall()[0]["participant_number"]  # type: ignore
         self.assertEqual(result_sql, 3)
 
@@ -47,7 +47,7 @@ class Test(unittest.TestCase):
         _ = create_projects(self.conn, TEMP_TIMESTAMP, gid, 3)
         _ = create_projects(self.conn, TEMP_TIMESTAMP, gid, 10)
         cur = self.conn.cursor(dictionary=True)
-        cur.execute("SELECT * FROM projects WHERE group_id=%s;", (gid,))
+        cur.execute("SELECT * FROM projects WHERE project_id=%s;", (gid,))
         result_sql = cur.fetchall()[0]["participant_number"]  # type: ignore
         self.assertEqual(result_sql, 10)
 
