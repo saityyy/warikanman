@@ -1,5 +1,3 @@
-
-
 def create_projects(conn, date_time, project_id, participant_number):
     cur = conn.cursor(dictionary=True)
     # すでにプロジェクトが存在する場合は削除
@@ -42,7 +40,10 @@ def check_payments_log(conn, project_id):
     cur = conn.cursor(dictionary=True)
     cur.execute(
         "SELECT participant_number FROM projects WHERE project_id=%s;", (project_id,))
-    participant_number = cur.fetchall()[0]["participant_number"]
+    project = cur.fetchall()
+    if len(project) == 0:
+        return "プロジェクトが存在しません"
+    participant_number = project[0]["participant_number"]
     query = """
         SELECT id,datetime,(SELECT name from users WHERE user_id=p.user_id) user_name,
         amount,message FROM payments p WHERE project_id=
@@ -55,8 +56,10 @@ def check_payments_log(conn, project_id):
     for idx, row in enumerate(result, start=1):
         datetime_str = row["datetime"].strftime("%-m/%-d %-H:%M")
         res += "{}) {}\n".format(idx, datetime_str)
-        res += "{}\n{}円\n{}\n\n".format(row["user_name"],
-                                        row["amount"], row["message"])
+        res += "{}：{}円\n".format(row["user_name"], row["amount"])
+        if row["message"] != "":
+            res += "メッセージ：{}\n".format(row["message"])
+        res += "\n"
     res += "合計 : {}円".format(sum([row["amount"] for row in result]))
     conn.commit()
     return res
@@ -74,7 +77,10 @@ def warikan(conn, project_id):
     # project's participants number
     cur.execute(
         "SELECT participant_number FROM projects WHERE project_id=%s;", (project_id,))
-    participant_number = cur.fetchall()[0]["participant_number"]
+    project = cur.fetchall()
+    if len(project) == 0:
+        return "プロジェクトが存在しません"
+    participant_number = project[0]["participant_number"]
     user2amount = {}
     # 合計金額を計算
     total_amount = 0
@@ -113,6 +119,8 @@ def delete_payment(conn, project_id, delete_number):
     cur = conn.cursor(dictionary=True)
     cur.execute(query, (project_id,))
     result = cur.fetchall()
+    if len(result) == 0:
+        return "プロジェクトが存在しません"
     if not (0 <= delete_number-1 < len(result)):
         return "その番号の記録は存在しません"
     cur.execute("DELETE FROM payments WHERE id=%s;",

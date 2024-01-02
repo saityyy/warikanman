@@ -67,6 +67,12 @@ class Test(unittest.TestCase):
         cur.execute("SELECT * FROM payments")
         self.assertEqual(cur.fetchall(), [])
 
+    # プロジェクトが存在しない場合
+    def test_delete_payment_noproject(self):
+        gid = random_group_id()
+        result = delete_payment(self.conn, gid, 1)
+        self.assertEqual(result, "プロジェクトが存在しません")
+
     # 指定の番号の記録が存在しない場合
     def test_delete_payment_norecord(self):
         gid = random_group_id()
@@ -74,6 +80,8 @@ class Test(unittest.TestCase):
         _ = add_payment(self.conn, gid, 1, "user1",
                         TEMP_DATETIME, 1000, "message1")
         result = delete_payment(self.conn, gid, -1)
+        self.assertEqual(result, "その番号の記録は存在しません")
+        result = delete_payment(self.conn, gid, 2)
         self.assertEqual(result, "その番号の記録は存在しません")
 
     def tearDown(self):

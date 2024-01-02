@@ -46,6 +46,12 @@ class Test(unittest.TestCase):
         self.assertEqual(result, f.read())
         f.close()
 
+    # プロジェクトが存在しない場合
+    def test_warikan_noproject(self):
+        gid = random_group_id()
+        result = warikan(self.conn, gid)
+        self.assertEqual(result, "プロジェクトが存在しません")
+
     def tearDown(self):
         cur = self.conn.cursor(dictionary=True)
         cur.execute("DELETE FROM projects;")

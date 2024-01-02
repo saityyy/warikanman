@@ -58,6 +58,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result, f.read())
         f.close()
 
+    # プロジェクトが存在しない場合
     def test_add_payment_noproject(self):
         gid = random_group_id()
         result = add_payment(self.conn, gid, 0, "user0",

@@ -43,11 +43,17 @@ class Test(unittest.TestCase):
         result = add_payment(self.conn, gid, 3, "user3",
                              TEMP_DATETIME+datetime.timedelta(minutes=30), 3000, "message3")
         result = add_payment(self.conn, gid, 1, "user1",
-                             TEMP_DATETIME+datetime.timedelta(minutes=40), 1000, "message4")
+                             TEMP_DATETIME+datetime.timedelta(minutes=40), 1000, "")
         result = check_payments_log(self.conn, gid)
         f = open("./tests/txt/test_check_payments_log_a")
         self.assertEqual(result, f.read())
         f.close()
+
+    # プロジェクトが存在しない場合
+    def test_check_payments_log_noproject(self):
+        gid = random_group_id()
+        result = check_payments_log(self.conn, gid)
+        self.assertEqual(result, "プロジェクトが存在しません")
 
     def tearDown(self):
         cur = self.conn.cursor(dictionary=True)
