@@ -103,8 +103,7 @@ def warikan(conn, project_id):
             res += "（{}円はらう）\n".format(amount_per_user-amount)
     other_num = participant_number-len(user2amount)
     if other_num > 0:
-        for _ in range(other_num):
-            res += "その他の参加者：0円（{}円はらう）\n".format(amount_per_user)
+        res += "その他の参加者：0円（{}円はらう）\n".format(amount_per_user)
     res = res[:-1]
     return res
 
@@ -139,27 +138,57 @@ def extract_message(message):
     }
     if messages[0] == "!help":
         res["type"] = "help"
-    elif messages[0] == "!check":
-        res["type"] = "check"
-    elif messages[0] == "!log":
-        res["type"] = "log"
-    elif messages[0] == "!project":
-        participant_number = message.split()[1]
-        res["type"] = "project"
-        res["args"] = (participant_number)
-        if not (participant_number.isdigit() and int(participant_number) > 0):
-            res["isValid"] = False
-            res["error_message"] = "参加人数は1以上の半角数字で入力してください"
         return res
-    elif messages[0] == "!delete":
-        index = message.split()[1]
+    if messages[0] == "!check":
+        res["type"] = "check"
+        return res
+    if messages[0] == "!log":
+        res["type"] = "log"
+        return res
+    if messages[0] == "!project":
+        res["type"] = "project"
+        if len(message.split()) == 1:
+            res["isValid"] = False
+            res["error_message"] = "プロジェクトの参加人数を半角数字で入力してください"
+            return res
+        participant_number = message.split()[1]
+        if not (participant_number.isdigit() and int(participant_number) >= 2):
+            res["isValid"] = False
+            res["error_message"] = "参加人数は2以上の半角数字で入力してください"
+            return res
+        res["args"] = (int(participant_number),)
+        return res
+    if messages[0] == "!delete":
         res["type"] = "delete"
-        res["args"] = (index)
+        if len(message.split()) == 1:
+            res["isValid"] = False
+            res["error_message"] = "削除する記録の通し番号を半角数字で入力してください"
+            return res
+        index = message.split()[1]
+        if not (index.isdigit() and int(index) >= 1):
+            res["isValid"] = False
+            res["error_message"] = "通し番号の指定は1以上の半角数字で入力してください"
+            return res
+        res["args"] = (int(index),)
+        return res
     elif messages[0] == "!pay":
-        amount = messages[1]
-        message = " ".join(messages[2:])
         res["type"] = "pay"
-        res["args"] = (amount, message)
+        if len(message.split()) == 1:
+            res["isValid"] = False
+            res["error_message"] = "はらった金額を半角数字で入力してください"
+            return res
+        amount = messages[1]
+        pay_message = " ".join(messages[2:])
+        if not (amount.isdigit() and int(amount) > 0):
+            res["isValid"] = False
+            res["error_message"] = "はらった金額は1以上の半角数字で入力してください"
+            return res
+        if len(pay_message) > 150:
+            res["isValid"] = False
+            res["error_message"] = "メッセージが長すぎます"
+            return res
+        res["args"] = (int(amount), pay_message)
+        return res
     else:
         res["type"] = "pass"
     return res

@@ -71,26 +71,32 @@ def handle_message(event):
         pass
     elif not message_result["isValid"]:
         send(event.reply_token, message_result["error_message"])
+    # !project <参加人数>
     elif message_result["type"] == "project":
-        participant_number = int(message_result["args"])
+        participant_number, = message_result["args"]
         res = functions.create_projects(
             conn, date_time, project_id, participant_number)
         send(event.reply_token, res)
+    # !log
     elif message_result["type"] == "log":
         res = functions.check_payments_log(conn, project_id)
         send(event.reply_token, res)
+    # !pay <金額> <メッセージ>
     elif message_result["type"] == "pay":
         amount, message = message_result["args"]
         res = functions.add_payment(
             conn, project_id, user_id, user, date_time, amount, message)
         send(event.reply_token, res)
+    # !check
     elif message_result["type"] == "check":
         res = functions.warikan(conn, project_id)
         send(event.reply_token, res)
+    # !delete <削除したい記録の通し番号>
     elif message_result["type"] == "delete":
-        del_index = message_result["args"]
+        del_index, = message_result["args"]
         res = functions.delete_payment(conn, project_id, int(del_index))
         send(event.reply_token, res)
+    # !help
     elif message_result["type"] == "help":
         f = open("./help.txt")
         send(event.reply_token, f.read())
