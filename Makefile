@@ -19,7 +19,7 @@ access-db:
 
 .PHONY: test
 test:
-	python -m unittest 
+	python -m unittest -v
 
 .PHONY: deploy_config
 deploy_config:

@@ -42,11 +42,28 @@ class Test(unittest.TestCase):
         _ = add_payment(self.conn, gid, 1, "user1",
                         TEMP_DATETIME, 1000, "message4")
         result = warikan(self.conn, gid)
-        f = open("./tests/txt/test_warikan_a", mode="r")
+        f = open("./tests/txt/test_warikan", mode="r")
+        self.assertEqual(result, f.read())
+        f.close()
+
+    def test_warikan_norecord(self):
+        gid = random_group_id()
+        _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
+        result = warikan(self.conn, gid)
+        self.assertEqual(result, "支払い記録がまだひとつもありません")
+
+    def test_warikan_others(self):
+        gid = random_group_id()
+        _ = create_projects(self.conn, TEMP_DATETIME, gid, 4)
+        _ = add_payment(self.conn, gid, 1, "user1",
+                        TEMP_DATETIME, 8000, "message1")
+        result = warikan(self.conn, gid)
+        f = open("./tests/txt/test_warikan_others", mode="r")
         self.assertEqual(result, f.read())
         f.close()
 
     # プロジェクトが存在しない場合
+
     def test_warikan_noproject(self):
         gid = random_group_id()
         result = warikan(self.conn, gid)

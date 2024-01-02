@@ -91,6 +91,8 @@ def warikan(conn, project_id):
         user2amount[row["user_name"]] += row["amount"]
     fraction = total_amount % participant_number
     amount_per_user = int(total_amount/participant_number)
+    if total_amount == 0:
+        return "支払い記録がまだひとつもありません"
     res = "合計金額 : {}円\n".format(total_amount)
     res += "参加人数 : {}人\n".format(participant_number)
     res += "一人あたりの金額 : {}円\n\n".format(amount_per_user)
