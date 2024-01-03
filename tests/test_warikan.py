@@ -33,13 +33,13 @@ class Test(unittest.TestCase):
     def test_warikan(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 1000, "message1")
-        _ = add_payment(self.conn, gid, 2, "user2",
+        _ = add_payment(self.conn, gid, "2", "user2",
                         TEMP_DATETIME, 2000, "message2")
-        _ = add_payment(self.conn, gid, 3, "user3",
+        _ = add_payment(self.conn, gid, "3", "user3",
                         TEMP_DATETIME, 3000, "message3")
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 1000, "message4")
         result = warikan(self.conn, gid)
         f = open("./tests/txt/test_warikan", mode="r")
@@ -55,7 +55,7 @@ class Test(unittest.TestCase):
     def test_warikan_others(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 4)
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 8000, "message1")
         result = warikan(self.conn, gid)
         f = open("./tests/txt/test_warikan_others", mode="r")

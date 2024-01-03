@@ -36,13 +36,13 @@ class Test(unittest.TestCase):
     def test_delete_payment(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 1000, "message1")
-        _ = add_payment(self.conn, gid, 2, "user2",
+        _ = add_payment(self.conn, gid, "2", "user2",
                         TEMP_DATETIME, 2000, "message2")
-        _ = add_payment(self.conn, gid, 3, "user3",
+        _ = add_payment(self.conn, gid, "3", "user3",
                         TEMP_DATETIME, 3000, "message3")
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "4", "user1",
                         TEMP_DATETIME, 1000, "message4")
         result = delete_payment(self.conn, gid, 1)
         self.assertEqual(result, "1番の記録を削除しました")
@@ -54,11 +54,11 @@ class Test(unittest.TestCase):
     def test_delete_payment_alldelete(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 1000, "message1")
-        _ = add_payment(self.conn, gid, 2, "user2",
+        _ = add_payment(self.conn, gid, "2", "user2",
                         TEMP_DATETIME, 2000, "message2")
-        _ = add_payment(self.conn, gid, 3, "user3",
+        _ = add_payment(self.conn, gid, "3", "user3",
                         TEMP_DATETIME, 3000, "message3")
         _ = delete_payment(self.conn, gid, 1)
         _ = delete_payment(self.conn, gid, 1)
@@ -77,7 +77,7 @@ class Test(unittest.TestCase):
     def test_delete_payment_norecord(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        _ = add_payment(self.conn, gid, 1, "user1",
+        _ = add_payment(self.conn, gid, "1", "user1",
                         TEMP_DATETIME, 1000, "message1")
         result = delete_payment(self.conn, gid, -1)
         self.assertEqual(result, "その番号の記録は存在しません")

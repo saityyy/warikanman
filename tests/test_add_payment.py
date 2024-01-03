@@ -34,7 +34,7 @@ class Test(unittest.TestCase):
     def test_add_payment(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        result = add_payment(self.conn, gid, 0, "user0",
+        result = add_payment(self.conn, gid, "0", "user0",
                              TEMP_DATETIME, 1000, "メッセージ")
         f = open("./tests/txt/test_add_payment")
         self.assertEqual(result, f.read())
@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
     def test_add_payment_newuser(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        result = add_payment(self.conn, gid, 1, "user1",
+        result = add_payment(self.conn, gid, "1", "user1",
                              TEMP_DATETIME, 1000, "メッセージ")
         f = open("./tests/txt/test_add_payment_newuser")
         self.assertEqual(result, f.read())
@@ -52,7 +52,7 @@ class Test(unittest.TestCase):
     def test_add_payment_rename(self):
         gid = random_group_id()
         _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
-        result = add_payment(self.conn, gid, 1, "user1_rename",
+        result = add_payment(self.conn, gid, "1", "user1_rename",
                              TEMP_DATETIME, 1000, "メッセージ")
         f = open("./tests/txt/test_add_payment_rename")
         self.assertEqual(result, f.read())
@@ -61,9 +61,22 @@ class Test(unittest.TestCase):
     # プロジェクトが存在しない場合
     def test_add_payment_noproject(self):
         gid = random_group_id()
-        result = add_payment(self.conn, gid, 0, "user0",
+        result = add_payment(self.conn, gid, "0", "user0",
                              TEMP_DATETIME, 1000, "メッセージ")
         self.assertEqual(result, "プロジェクトが存在しません")
+
+    def test_add_payment_user_exceeded(self):
+        gid = random_group_id()
+        _ = create_projects(self.conn, TEMP_DATETIME, gid, 3)
+        _ = add_payment(self.conn, gid, "0", "user0",
+                        TEMP_DATETIME, 1000, "メッセージ")
+        _ = add_payment(self.conn, gid, "1", "user1",
+                        TEMP_DATETIME, 1000, "メッセージ")
+        _ = add_payment(self.conn, gid, "2", "user2",
+                        TEMP_DATETIME, 1000, "メッセージ")
+        result = add_payment(self.conn, gid, "3", "user3",
+                             TEMP_DATETIME, 1000, "メッセージ")
+        self.assertEqual(result, "設定した参加人数を超えています")
 
     def tearDown(self):
         cur = self.conn.cursor(dictionary=True)

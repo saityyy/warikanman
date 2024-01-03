@@ -11,11 +11,18 @@ def create_projects(conn, date_time, project_id, participant_number):
     return res
 
 
-def add_payment(conn, project_id, user_id, name, date_time, amount, message):
+def add_payment(conn, project_id, user_id: str, name, date_time, amount, message):
     cur = conn.cursor(dictionary=True)
     cur.execute("SELECT * FROM projects WHERE project_id=%s;", (project_id,))
-    if len(cur.fetchall()) == 0:
+    res = cur.fetchall()
+    if len(res) == 0:
         return "プロジェクトが存在しません"
+    participant_number = res[0]["participant_number"]
+    cur.execute(
+        "SELECT DISTINCT user_id FROM payments WHERE project_id=%s;", (project_id,))
+    res = cur.fetchall()
+    if len(res) == participant_number and (user_id not in [row["user_id"] for row in res]):
+        return "設定した参加人数を超えています"
     cur.execute("SELECT name FROM users WHERE user_id=%s;", (user_id,))
     result = cur.fetchall()
     # ユーザーが存在しない場合は追加

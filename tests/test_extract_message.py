@@ -1,7 +1,4 @@
-import random
 import unittest
-import mysql.connector
-import datetime
 
 from functions.functions import extract_message
 
