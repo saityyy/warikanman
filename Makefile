@@ -24,5 +24,5 @@ test:
 .PHONY: deploy_config
 deploy_config:
 	cp /home/ubuntu/warikanman/deploy_config/nginx/default /etc/nginx/sites-available/default
-	cp /home/ubuntu/warikanman/deploy_config/env/linebot_env.sh ~/linebot_env.sh
+	cp /home/ubuntu/warikanman/deploy_config/env/linebot_env.sh ~/linebot_env
 	cp /home/ubuntu/warikanman/deploy_config/systemd/warikanman.service ~/.config/systemd/user/warikanman.service
