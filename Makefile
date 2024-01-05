@@ -10,10 +10,10 @@ restart:
 .PHONY: status
 status:
 	systemctl --user status warikanman.service
-.PHONY: access-db
 .PHONY: dreload
 dreload:
 	systemctl --user daemon-reload
+.PHONY: access-db
 access-db:
 	mysql -u warikanman -pwarikanman warikanman
 
@@ -21,8 +21,10 @@ access-db:
 test:
 	python -m unittest -v
 
-.PHONY: deploy_config
-deploy_config:
+.PHONY: deploy
+deploy:
 	cp /home/ubuntu/warikanman/deploy_config/nginx/default /etc/nginx/sites-available/default
 	cp /home/ubuntu/warikanman/deploy_config/env/linebot_env.sh ~/linebot_env
 	cp /home/ubuntu/warikanman/deploy_config/systemd/warikanman.service ~/.config/systemd/user/warikanman.service
+	sudo cp -r /home/ubuntu/warikanman/deploy_config/html /var/www/
+

@@ -7,13 +7,14 @@ server{
 	return 404;
 }
 server {
-	#root /var/www/html;
-	#index index.html index.htm index.nginx-debian.html;
+	root /var/www/html;
+	index index.html; 
+	charset UTF-8;
 
 
-	#location / {
-		#try_files $uri $uri/ =404;
-	#}
+	location / {
+		try_files $uri $uri/ =404;
+	}
 	location /callback {
     	proxy_set_header Host $host;
     	proxy_set_header X-Proto $http_x_forwarded_proto;
