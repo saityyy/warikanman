@@ -1,0 +1,4 @@
+.venv
+.vscode
+__pycache__
+deploy_config/env/linebot_env.sh

@@ -1,0 +1,12 @@
+[Unit]
+Description=warikanman
+After=mysql.service
+
+[Service]
+Type=simple
+EnvironmentFile=/home/ubuntu/linebot_env.sh
+ExecStart=/usr/bin/bash -c "cd /home/ubuntu/warikanman&& source ./.venv/bin/activate &&uwsgi --ini ./deploy_config/uwsgi/uwsgi.ini"
+ExecStop=/usr/bin/bash -c "cd /home/ubuntu/warikanman && source ./.venv/bin/activate&& uwsgi --stop /home/ubuntu/uwsgi.pid"
+
+[Install]
+WantedBy=multi-user.target
