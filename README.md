@@ -1,5 +1,9 @@
 # warikanman
 割り勘してくれるLINEbotです。  
+
+
+<img src="./sample/qr.png" width=150 height=150>
+
 下記のいくつかのコマンドは"!help"コマンドでも簡単に確認することができます。
 
 # プロジェクト作成
