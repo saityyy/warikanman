@@ -1,4 +1,6 @@
 # warikanman
+[![Python application](https://github.com/saityyy/warikanman/actions/workflows/python-app.yml/badge.svg)](https://github.com/saityyy/warikanman/actions/workflows/python-app.yml)  
+
 割り勘してくれるLINEbotです。  
 
 
