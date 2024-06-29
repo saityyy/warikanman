@@ -2,6 +2,7 @@
 [![Python application](https://github.com/saityyy/warikanman/actions/workflows/python-app.yml/badge.svg)](https://github.com/saityyy/warikanman/actions/workflows/python-app.yml)  
 
 割り勘してくれるLINEbotです。  
+現在サービスは停止中です。
 
 
 <img src="./sample/qr.png" width=150 height=150>
